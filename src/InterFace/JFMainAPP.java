@@ -12,6 +12,7 @@ import TableModels.AdminViewRequestTableModel;
 import TableModels.CourierRequestTableModel;
 import TableModels.DeliveryTableModel;
 import TableModels.DeliveryViewRQAdminTableModel;
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -19,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
@@ -26,34 +28,34 @@ import models.Account;
 import models.Courier_Request;
 import models.DeliveryPerson;
 
-
-
 /**
  *
  * @author PC
  */
 public final class JFMainAPP extends javax.swing.JFrame {
+
     ConnectSQL cn = new ConnectSQL();
-    ArrayList<DeliveryPerson> listDeliveryPersons= cn.getListDeliveryPerson();
-    ArrayList<Courier_Request> listCourierRequest= cn.getListCourier_Request();
+    ArrayList<DeliveryPerson> listDeliveryPersons = cn.getListDeliveryPerson();
+    ArrayList<Courier_Request> listCourierRequest = cn.getListCourier_Request();
     ArrayList<Courier_Request> listViewRequestAdmin = new ArrayList<Courier_Request>();
-    public Account LoadAccount(String username, String password){
+
+    public Account LoadAccount(String username, String password) {
         return cn.getAccountByUserPass(username, password);
     }
-    
+
     public JFMainAPP() {
         initComponents();
         fill();
         lbl_Show_AccountName.setText(Run.acc.getUsername());
-        if(Run.acc.getLevel()==1){
+        if (Run.acc.getLevel() == 1) {
             btnUser.setEnabled(false);
             btn_DeliveryPerson.setEnabled(false);
         }
-        if(Run.acc.getLevel()==2){
+        if (Run.acc.getLevel() == 2) {
             btn_Admin.setEnabled(false);
             btnUser.setEnabled(false);
         }
-        if(Run.acc.getLevel()==3){
+        if (Run.acc.getLevel() == 3) {
             btn_Admin.setEnabled(false);
             btn_DeliveryPerson.setEnabled(false);
         }
@@ -61,55 +63,60 @@ public final class JFMainAPP extends javax.swing.JFrame {
         refreshTableCourier_Request();
         refreshTableViewUserRequest();
         refreshTableViewAdminRequest();
-        
+
     }
-    public void refreshTableDeliveryPerson(){
+
+    public void refreshTableDeliveryPerson() {
         DeliveryTableModel tableModel = new DeliveryTableModel(listDeliveryPersons);
         this.Table_ViewDelivery.setModel(tableModel);
     }
-    public void refreshTableCourier_Request(){
+
+    public void refreshTableCourier_Request() {
         CourierRequestTableModel tableModel = new CourierRequestTableModel(listCourierRequest);
         this.Table_ViewCourierStatus.setModel(tableModel);
     }
-    public void refreshTableViewUserRequest(){
+
+    public void refreshTableViewUserRequest() {
         AdminViewRequestTableModel tableModel = new AdminViewRequestTableModel(listCourierRequest);
         this.Table_ViewUserRequest.setModel(tableModel);
     }
-     public void refreshTableViewAdminRequest(){
+
+    public void refreshTableViewAdminRequest() {
         DeliveryViewRQAdminTableModel tableModel = new DeliveryViewRQAdminTableModel(listCourierRequest);
         this.table_ViewRequestAdmin.setModel(tableModel);
     }
     MP3 mp3;
- 
-    public void fill(){
- 
+
+    public void fill() {
+
         JplayoutHomeAccount.add(Home);
         JplayoutHomeAccount.updateUI();
-        mp3 = new MP3 ("src/Sound/Ai la trieu phu - ai la trieu phu.MP3");
+        mp3 = new MP3("src/Sound/Ai la trieu phu - ai la trieu phu.MP3");
         mp3.play();
         btn_mute.setVisible(false);
- 
+
     }
-     public void reloadPanel(int i) {
+
+    public void reloadPanel(int i) {
         JplayoutHomeAccount.removeAll();
-        switch(i){
+        switch (i) {
             case 1:
-                mp3 = new MP3 ("src/Sound/kasya.MP3");
+                mp3 = new MP3("src/Sound/kasya.MP3");
                 mp3.play();
                 JplayoutHomeAccount.add(JpHome);
                 break;
             case 2:
-                mp3 = new MP3 ("src/Sound/kasya.MP3");
+                mp3 = new MP3("src/Sound/kasya.MP3");
                 mp3.play();
                 JplayoutHomeAccount.add(JPAdmin);
                 break;
             case 3:
-                mp3 = new MP3 ("src/Sound/kasya.MP3");
+                mp3 = new MP3("src/Sound/kasya.MP3");
                 mp3.play();
                 JplayoutHomeAccount.add(JPDeliveryPerson);
-                break; 
+                break;
             case 4:
-                mp3 = new MP3 ("src/Sound/kasya.MP3");
+                mp3 = new MP3("src/Sound/kasya.MP3");
                 mp3.play();
                 JplayoutHomeAccount.add(JPUser);
                 break;
@@ -117,40 +124,44 @@ public final class JFMainAPP extends javax.swing.JFrame {
                 break;
         }
         JplayoutHomeAccount.updateUI();
-     }
- class MP3 {
-    private Player player;
-    private String filename;
-    
-    public MP3(String filename) {
-        this.filename = filename;
     }
-    
-    public void stop() {
-        if (player != null)
-            player.close();
-    }
-    
-    public void play() {
-        try {
-            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(filename));
-            player = new Player(bis);
-        } catch (FileNotFoundException | JavaLayerException ex) {
-            System.out.println(ex);
+
+    class MP3 {
+
+        private Player player;
+        private String filename;
+
+        public MP3(String filename) {
+            this.filename = filename;
         }
-        
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    player.play();
-                } catch (Exception ex) {
-                    System.out.println(ex);
-                }
+
+        public void stop() {
+            if (player != null) {
+                player.close();
             }
-        }).start();
+        }
+
+        public void play() {
+            try {
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(filename));
+                player = new Player(bis);
+            } catch (FileNotFoundException | JavaLayerException ex) {
+                System.out.println(ex);
+            }
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        player.play();
+                    } catch (Exception ex) {
+                        System.out.println(ex);
+                    }
+                }
+            }).start();
+        }
     }
-}
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -464,11 +475,11 @@ public final class JFMainAPP extends javax.swing.JFrame {
         JpHome.setLayout(JpHomeLayout);
         JpHomeLayout.setHorizontalGroup(
             JpHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1423, Short.MAX_VALUE)
+            .addGap(0, 1424, Short.MAX_VALUE)
         );
         JpHomeLayout.setVerticalGroup(
             JpHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 574, Short.MAX_VALUE)
+            .addGap(0, 595, Short.MAX_VALUE)
         );
 
         JplayoutHomeAccount.add(JpHome, "card2");
@@ -569,17 +580,42 @@ public final class JFMainAPP extends javax.swing.JFrame {
         jLabel9.setText("Mobile Number");
 
         txt_UserNamP.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txt_UserNamP.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_UserNamPKeyPressed(evt);
+            }
+        });
 
         txt_PasswordP.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txt_PasswordP.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_PasswordPKeyPressed(evt);
+            }
+        });
 
         Cbx_GenderP.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         Cbx_GenderP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select....", "Male", "Female", "Other" }));
 
         txt_EmailP.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txt_EmailP.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_EmailPKeyPressed(evt);
+            }
+        });
 
         txt_LocationP.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txt_LocationP.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_LocationPKeyPressed(evt);
+            }
+        });
 
         txt_MobileNumberP.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txt_MobileNumberP.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_MobileNumberPKeyPressed(evt);
+            }
+        });
 
         jLabel20.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel20.setText("Date Of Birth");
@@ -991,7 +1027,7 @@ public final class JFMainAPP extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(btn_ViewAdminRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(504, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         JplayoutDeliveryperson.setLayout(new java.awt.CardLayout());
@@ -1191,7 +1227,7 @@ public final class JFMainAPP extends javax.swing.JFrame {
         );
         JP_HomeDeliveryLayout.setVerticalGroup(
             JP_HomeDeliveryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 574, Short.MAX_VALUE)
+            .addGap(0, 575, Short.MAX_VALUE)
         );
 
         JplayoutDeliveryperson.add(JP_HomeDelivery, "card4");
@@ -1318,7 +1354,7 @@ public final class JFMainAPP extends javax.swing.JFrame {
         jLabel14.setText("Description");
 
         jLabel15.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel15.setText("Approx Weight");
+        jLabel15.setText("Approx Weight(Kg)");
 
         jLabel16.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel16.setText("Destination");
@@ -1401,7 +1437,7 @@ public final class JFMainAPP extends javax.swing.JFrame {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(JRB_GOLD, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+            .addComponent(JRB_GOLD, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel30, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1468,30 +1504,28 @@ public final class JFMainAPP extends javax.swing.JFrame {
                 .addGroup(JP_ViewSendcourierRequestLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(JP_ViewSendcourierRequestLayout.createSequentialGroup()
                         .addGroup(JP_ViewSendcourierRequestLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(JP_ViewSendcourierRequestLayout.createSequentialGroup()
-                                .addGroup(JP_ViewSendcourierRequestLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel14)
-                                    .addComponent(jLabel15)
-                                    .addComponent(jLabel16)
-                                    .addComponent(jLabel17)
-                                    .addComponent(jLabel18))
-                                .addGap(48, 48, 48)
-                                .addGroup(JP_ViewSendcourierRequestLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txt_DescriptionR, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txt_DestinationR, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txt_AddressR, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txt_PhoneR, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(txt_ApproxWeightR, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel14)
+                            .addComponent(jLabel15)
+                            .addComponent(jLabel16)
+                            .addComponent(jLabel17)
+                            .addComponent(jLabel18))
+                        .addGap(27, 27, 27)
+                        .addGroup(JP_ViewSendcourierRequestLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_ApproxWeightR, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txt_DescriptionR, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txt_DestinationR, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txt_AddressR, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txt_PhoneR, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(JP_ViewSendcourierRequestLayout.createSequentialGroup()
                         .addGroup(JP_ViewSendcourierRequestLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel12))
-                        .addGap(89, 89, 89)
+                        .addGap(103, 103, 103)
                         .addGroup(JP_ViewSendcourierRequestLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txt_UsernameR, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txt_EmailR, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(42, 42, 42)
+                        .addGap(28, 28, 28)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(46, 46, 46)
                         .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1511,11 +1545,12 @@ public final class JFMainAPP extends javax.swing.JFrame {
                 .addGap(31, 31, 31)
                 .addGroup(JP_ViewSendcourierRequestLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(JP_ViewSendcourierRequestLayout.createSequentialGroup()
-                        .addGroup(JP_ViewSendcourierRequestLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txt_UsernameR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel12))
+                        .addGap(3, 3, 3)
+                        .addGroup(JP_ViewSendcourierRequestLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel12)
+                            .addComponent(txt_UsernameR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(36, 36, 36)
-                        .addGroup(JP_ViewSendcourierRequestLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(JP_ViewSendcourierRequestLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel13)
                             .addComponent(txt_EmailR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1543,7 +1578,7 @@ public final class JFMainAPP extends javax.swing.JFrame {
                     .addComponent(txt_PhoneR, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btn_SendRequest)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         JpLayoutUser.add(JP_ViewSendcourierRequest, "card2");
@@ -1625,28 +1660,27 @@ public final class JFMainAPP extends javax.swing.JFrame {
         JpLayoutUser.add(JP_HomeUser);
         JpLayoutUser.updateUI();
     }//GEN-LAST:event_btnUserActionPerformed
- MP3 nhacnen;
+    MP3 nhacnen;
     private void btn_muteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_muteActionPerformed
         // TODO add your handling code here:
-         nhacnen.stop();
+        nhacnen.stop();
         btn_sound.setVisible(true);
         btn_mute.setVisible(false);
     }//GEN-LAST:event_btn_muteActionPerformed
 
     private void btn_soundActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_soundActionPerformed
         // TODO add your handling code here:
-        nhacnen = new MP3 ("src/Sound/Fur Elise - Richard Clayderman.MP3");
+        nhacnen = new MP3("src/Sound/Fur Elise - Richard Clayderman.MP3");
         nhacnen.play();
         btn_sound.setVisible(false);
         btn_mute.setVisible(true);
     }//GEN-LAST:event_btn_soundActionPerformed
-   
+
     private void btn_LogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_LogoutActionPerformed
         // TODO add your handling code here:
-        int kq=JOptionPane.showConfirmDialog(null, "Đăng xuất khỏi tài khoản " +Run.acc.getUsername()+ "?","FBI Warning",JOptionPane.YES_NO_OPTION);
-        if(kq==0)
-        {
-            MP3 mp3 = new MP3 ("src/Sound/tyaran.MP3");
+        int kq = JOptionPane.showConfirmDialog(null, "Đăng xuất khỏi tài khoản " + Run.acc.getUsername() + "?", "FBI Warning", JOptionPane.YES_NO_OPTION);
+        if (kq == 0) {
+            MP3 mp3 = new MP3("src/Sound/tyaran.MP3");
             mp3.play();
             Run.mainApp.setVisible(true);
             Run.login.setVisible(true);
@@ -1656,24 +1690,24 @@ public final class JFMainAPP extends javax.swing.JFrame {
 //layoutAdmin
     private void btn_Add_DPersonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_Add_DPersonActionPerformed
         // TODO add your handling code here:
-            JPlayoutAmin.removeAll();
-            JPlayoutAmin.add(JP_ViewAddDeliveryP);
-            JPlayoutAmin.updateUI();
-        
+        JPlayoutAmin.removeAll();
+        JPlayoutAmin.add(JP_ViewAddDeliveryP);
+        JPlayoutAmin.updateUI();
+
     }//GEN-LAST:event_btn_Add_DPersonActionPerformed
 
     private void btn_View_DPersonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_View_DPersonActionPerformed
         // TODO add your handling code here:
-            JPlayoutAmin.removeAll();
-            JPlayoutAmin.add(JP_ViewDeliveryP);
-            JPlayoutAmin.updateUI();
+        JPlayoutAmin.removeAll();
+        JPlayoutAmin.add(JP_ViewDeliveryP);
+        JPlayoutAmin.updateUI();
     }//GEN-LAST:event_btn_View_DPersonActionPerformed
 
     private void btn_ViewRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ViewRequestActionPerformed
         // TODO add your handling code here:
-            JPlayoutAmin.removeAll();
-            JPlayoutAmin.add(JP_ViewRequest);
-            JPlayoutAmin.updateUI();
+        JPlayoutAmin.removeAll();
+        JPlayoutAmin.add(JP_ViewRequest);
+        JPlayoutAmin.updateUI();
     }//GEN-LAST:event_btn_ViewRequestActionPerformed
 //layout DeliveryPerSon
     private void btn_ViewAdminRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ViewAdminRequestActionPerformed
@@ -1698,26 +1732,164 @@ public final class JFMainAPP extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_ViewStatusActionPerformed
 
     private void btn_AddDeliveryPersonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddDeliveryPersonActionPerformed
-        // TODO add your handling code here:
+        String user, email, gender, address, phone;
+
+        boolean checkFill = true;
+        boolean checkUser;
+        user = txt_UserNamP.getText();
+        email = txt_EmailP.getText();
+        gender = (String) Cbx_GenderP.getSelectedItem();
+        address = txt_LocationP.getText();
+        phone = txt_MobileNumberP.getText();
+
+        if (user.equals("")) {
+            txt_UserNamP.setBorder(BorderFactory.createLineBorder(Color.RED));
+            checkFill = false;
+        }
+
+        if (email.equals("")) {
+            txt_EmailP.setBorder(BorderFactory.createLineBorder(Color.RED));
+            checkFill = false;
+        }
+
+        if (address.equals("")) {
+            txt_LocationP.setBorder(BorderFactory.createLineBorder(Color.RED));
+            checkFill = false;
+        }
+
+        if (phone.equals("")) {
+            txt_MobileNumberP.setBorder(BorderFactory.createLineBorder(Color.RED));
+            checkFill = false;
+        }
+
+        if (!checkFill) {
+            JOptionPane.showMessageDialog(this, "Please Fill in All");
+            return;
+        }
+
+        checkUser = doCheckUser(user);
+        if (!checkUser) {
+            JOptionPane.showMessageDialog(this, "Username is already used");
+            return;
+        }
+
+        if (gender.equalsIgnoreCase("select....")) {
+            JOptionPane.showMessageDialog(this, "Choose Gender");
+            return;
+        }
+
+        try {
+            Long.parseLong(phone);
+        } catch (NumberFormatException e) {
+            txt_MobileNumberP.setBorder(BorderFactory.createLineBorder(Color.RED));
+            JOptionPane.showMessageDialog(this, "Not a valid Phone Number");
+            return;
+        }
+
+        doAddDeliveryPerson();
+
+    }//GEN-LAST:event_btn_AddDeliveryPersonActionPerformed
+
+    private boolean doCheckUser(String user) {
+        ArrayList<Account> list = cn.getListAccount();
+
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getUsername().equalsIgnoreCase(user)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void doAddDeliveryPerson() {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         DeliveryPerson person = new DeliveryPerson();
         person.setUsernameP(txt_UserNamP.getText());
         person.setPasswordP(txt_PasswordP.getText());
         person.setEmailP(txt_EmailP.getText());
-        person.setGenderP((String)Cbx_GenderP.getSelectedItem());
+        person.setGenderP((String) Cbx_GenderP.getSelectedItem());
         person.setDateOfBirthP(df.format(jDate_DateOfBirthP.getDate()));
         person.setAddressP(txt_LocationP.getText());
         person.setPhoneNumberP(txt_MobileNumberP.getText());
         cn.InsertAccountDeliveryPerson(person);
         int numberDelivery = cn.InsertDeliveryPerson(person);
-        listDeliveryPersons =cn.getListDeliveryPerson();
+        listDeliveryPersons = cn.getListDeliveryPerson();
         refreshTableDeliveryPerson();
-        
-        
-    }//GEN-LAST:event_btn_AddDeliveryPersonActionPerformed
+    }
 
     private void btn_SendRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SendRequestActionPerformed
         // TODO add your handling code here:
+        String user, email, description, weight, destination, address, phone;
+        boolean checkFill = true;
+
+        user = this.txt_UsernameR.getText();
+        email = txt_EmailR.getText();
+        description = txt_DescriptionR.getText();
+        weight = txt_ApproxWeightR.getText();
+        destination = txt_DestinationR.getText();
+        address = txt_AddressR.getText();
+        phone = txt_PhoneR.getText();
+
+        if (user.equals("")) {
+            this.txt_UsernameR.setBorder(BorderFactory.createLineBorder(Color.RED));
+            checkFill = false;
+        }
+
+        if (email.equals("")) {
+            this.txt_EmailR.setBorder(BorderFactory.createLineBorder(Color.RED));
+            checkFill = false;
+        }
+
+        if (description.equals("")) {
+            this.txt_DescriptionR.setBorder(BorderFactory.createLineBorder(Color.RED));
+            checkFill = false;
+        }
+
+        if (weight.equals("")) {
+            this.txt_ApproxWeightR.setBorder(BorderFactory.createLineBorder(Color.RED));
+            checkFill = false;
+        }
+
+        if (destination.equals("")) {
+            this.txt_DestinationR.setBorder(BorderFactory.createLineBorder(Color.RED));
+            checkFill = false;
+        }
+
+        if (address.equals("")) {
+            this.txt_AddressR.setBorder(BorderFactory.createLineBorder(Color.RED));
+            checkFill = false;
+        }
+
+        if (phone.equals("")) {
+            this.txt_PhoneR.setBorder(BorderFactory.createLineBorder(Color.RED));
+            checkFill = false;
+        }
+
+        if(!checkFill){
+            JOptionPane.showMessageDialog(this, "Please Fill in All");
+            return;
+        }
+        
+        try {
+            Float.parseFloat(weight);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Weight must be a number");
+            return;
+        }
+        
+        try {
+            Long.parseLong(phone);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Not a valid Phone Number");
+            return;
+        }
+        
+        doAddRequest();
+        clearRequest();
+    }//GEN-LAST:event_btn_SendRequestActionPerformed
+
+    private void doAddRequest() {
         Courier_Request cr = new Courier_Request();
         cr.setUsernameR(txt_UsernameR.getText());
         cr.setEmailR(txt_EmailR.getText());
@@ -1729,29 +1901,37 @@ public final class JFMainAPP extends javax.swing.JFrame {
         /*cr.setStatusR("pending");
         cr.setPersonNameR("No Name");
         cr.setCurrentLocationR("No");*/
-        String shippingService ="";
-        int cost =0;
-        if(JRB_PREMIUM.isSelected()){
-            shippingService= "PREMIUM(2days)";
-            cost=240;
+        String shippingService = "";
+        int cost = 0;
+        if (JRB_PREMIUM.isSelected()) {
+            shippingService = "PREMIUM(2days)";
+            cost = 240;
         }
-        if(JRB_GOLD.isSelected()){
-           shippingService ="GOLD(3days)";
-           cost=220;
+        if (JRB_GOLD.isSelected()) {
+            shippingService = "GOLD(3days)";
+            cost = 220;
         }
-        if(JRB_SILVER.isSelected()){
-            shippingService ="SILVER(4days)";
-            cost =200;
+        if (JRB_SILVER.isSelected()) {
+            shippingService = "SILVER(4days)";
+            cost = 200;
         }
         cr.setShippingServiceR(shippingService);
         cr.setCostR(cost);
         int request = cn.InsertCourier_Request(cr);
-        listCourierRequest =cn.getListCourier_Request();
+        listCourierRequest = cn.getListCourier_Request();
         refreshTableCourier_Request();
         refreshTableViewUserRequest();
-        
-    }//GEN-LAST:event_btn_SendRequestActionPerformed
-    
+    }
+    private void clearRequest(){
+        txt_UsernameR.setText("");
+        txt_EmailR.setText("");
+        txt_DescriptionR.setText("");
+        txt_ApproxWeightR.setText("");
+        txt_DestinationR.setText("");
+        txt_AddressR.setText("");
+        txt_PhoneR.setText("");
+   }
+
     private void Table_ViewDeliveryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Table_ViewDeliveryMouseClicked
         // TODO add your handling code here:
         if (evt.getButton() == MouseEvent.BUTTON3) {
@@ -1765,11 +1945,11 @@ public final class JFMainAPP extends javax.swing.JFrame {
             fillInDataViewDP();
         }
     }//GEN-LAST:event_Table_ViewDeliveryMouseClicked
-    
-    private void fillInDataViewDP(){
+
+    private void fillInDataViewDP() {
         int row = this.Table_ViewDelivery.getSelectedRow();
         DeliveryTableModel model = (DeliveryTableModel) this.Table_ViewDelivery.getModel();
-        DeliveryPerson selectDP = (DeliveryPerson)model.getObjectAtRow(row);
+        DeliveryPerson selectDP = (DeliveryPerson) model.getObjectAtRow(row);
         this.lbl_code_viewDP.setText(String.valueOf(selectDP.getDeliveryPersonID()));
         this.lbl_UserNameDP.setText(selectDP.getUsernameP());
         this.lbl_EmailDP.setText(selectDP.getEmailP());
@@ -1777,20 +1957,20 @@ public final class JFMainAPP extends javax.swing.JFrame {
         this.lbl_LocationDP.setText(selectDP.getAddressP());
         this.lbl_mobileDP.setText(selectDP.getPhoneNumberP());
     }
-    
+
     private void EditDeliveryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditDeliveryActionPerformed
         // TODO add your handling code here:
-            jplayoutEditDelivery.removeAll();
-            jplayoutEditDelivery.add(JP_Edit_Delivery);
-            jplayoutEditDelivery.repaint();
-            jplayoutEditDelivery.revalidate();
-            fillInDataViewDP_Edit();
-        
+        jplayoutEditDelivery.removeAll();
+        jplayoutEditDelivery.add(JP_Edit_Delivery);
+        jplayoutEditDelivery.repaint();
+        jplayoutEditDelivery.revalidate();
+        fillInDataViewDP_Edit();
+
     }//GEN-LAST:event_EditDeliveryActionPerformed
-    private void fillInDataViewDP_Edit(){
+    private void fillInDataViewDP_Edit() {
         int row = this.Table_ViewDelivery.getSelectedRow();
         DeliveryTableModel model = (DeliveryTableModel) this.Table_ViewDelivery.getModel();
-        DeliveryPerson selectDP = (DeliveryPerson)model.getObjectAtRow(row);
+        DeliveryPerson selectDP = (DeliveryPerson) model.getObjectAtRow(row);
         this.txt_code_editDP.setText(String.valueOf(selectDP.getDeliveryPersonID()));
         this.txt_username_editDP.setText(selectDP.getUsernameP());
         this.txt_Email_editDP.setText(selectDP.getEmailP());
@@ -1800,29 +1980,29 @@ public final class JFMainAPP extends javax.swing.JFrame {
     }
     private void DeleteDeliveryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteDeliveryActionPerformed
         // TODO add your handling code here:
-         int row = this.Table_ViewDelivery.getSelectedRow();
-         DeliveryTableModel model = (DeliveryTableModel) this.Table_ViewDelivery.getModel();
-         DeliveryPerson selectDP = (DeliveryPerson)model.getObjectAtRow(row);
-         cn.DeleteDeliveryPerson(selectDP.getDeliveryPersonID());
-         listDeliveryPersons = cn.getListDeliveryPerson();
-         refreshTableDeliveryPerson();
+        int row = this.Table_ViewDelivery.getSelectedRow();
+        DeliveryTableModel model = (DeliveryTableModel) this.Table_ViewDelivery.getModel();
+        DeliveryPerson selectDP = (DeliveryPerson) model.getObjectAtRow(row);
+        cn.DeleteDeliveryPerson(selectDP.getDeliveryPersonID());
+        listDeliveryPersons = cn.getListDeliveryPerson();
+        refreshTableDeliveryPerson();
     }//GEN-LAST:event_DeleteDeliveryActionPerformed
 
     private void btn_EditDPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EditDPActionPerformed
         // TODO add your handling code here:
         int row = this.Table_ViewDelivery.getSelectedRow();
         DeliveryTableModel model = (DeliveryTableModel) this.Table_ViewDelivery.getModel();
-        DeliveryPerson selectDP = (DeliveryPerson)model.getObjectAtRow(row);
-            selectDP.setDeliveryPersonID(Integer.parseInt(txt_code_editDP.getText()));
-            selectDP.setUsernameP(txt_username_editDP.getText());
-            selectDP.setEmailP(txt_Email_editDP.getText());
-            selectDP.setAddressP(txt_Location_editDP.getText());
-            selectDP.setGenderP((String)cbx_EDitGenderDP.getSelectedItem());
-            selectDP.setPhoneNumberP(txt_Mobile_editDP.getText());
-            cn.UpdateDeliveryPerson(selectDP);
-            cleardataDP();
-            listDeliveryPersons = cn.getListDeliveryPerson();
-            refreshTableDeliveryPerson(); 
+        DeliveryPerson selectDP = (DeliveryPerson) model.getObjectAtRow(row);
+        selectDP.setDeliveryPersonID(Integer.parseInt(txt_code_editDP.getText()));
+        selectDP.setUsernameP(txt_username_editDP.getText());
+        selectDP.setEmailP(txt_Email_editDP.getText());
+        selectDP.setAddressP(txt_Location_editDP.getText());
+        selectDP.setGenderP((String) cbx_EDitGenderDP.getSelectedItem());
+        selectDP.setPhoneNumberP(txt_Mobile_editDP.getText());
+        cn.UpdateDeliveryPerson(selectDP);
+        cleardataDP();
+        listDeliveryPersons = cn.getListDeliveryPerson();
+        refreshTableDeliveryPerson();
     }//GEN-LAST:event_btn_EditDPActionPerformed
 
     private void Table_ViewUserRequestMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Table_ViewUserRequestMouseClicked
@@ -1834,42 +2014,62 @@ public final class JFMainAPP extends javax.swing.JFrame {
 
     private void SendToDeliveryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SendToDeliveryActionPerformed
         // TODO add your handling code here:
-       // int row = this.Table_ViewUserRequest.getSelectedRow();
-       // AdminViewRequestTableModel model = (AdminViewRequestTableModel) this.Table_ViewUserRequest.getModel();
-       // Courier_Request selectCR = (Courier_Request)model.getObjectAtRow(row);
-        listCourierRequest =cn.getListCourier_Request();
+        // int row = this.Table_ViewUserRequest.getSelectedRow();
+        // AdminViewRequestTableModel model = (AdminViewRequestTableModel) this.Table_ViewUserRequest.getModel();
+        // Courier_Request selectCR = (Courier_Request)model.getObjectAtRow(row);
+        listCourierRequest = cn.getListCourier_Request();
         refreshTableViewAdminRequest();
         JOptionPane.showMessageDialog(this, "successfull");
-        
-            
+
+
     }//GEN-LAST:event_SendToDeliveryActionPerformed
 
     private void table_ViewRequestAdminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_ViewRequestAdminMouseClicked
         // TODO add your handling code here:
-             if (evt.getButton() == MouseEvent.BUTTON1) {
+        if (evt.getButton() == MouseEvent.BUTTON1) {
             fillInDataViewAdminRequest();
-        }         
-        
+        }
+
     }//GEN-LAST:event_table_ViewRequestAdminMouseClicked
 
     private void btnApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApproveActionPerformed
         // TODO add your handling code here:
         int row = this.table_ViewRequestAdmin.getSelectedRow();
         DeliveryViewRQAdminTableModel model = (DeliveryViewRQAdminTableModel) this.table_ViewRequestAdmin.getModel();
-        Courier_Request selectCR = (Courier_Request)model.getObjectAtRow(row);
-            selectCR.setCurrentLocationR(txtCurrentLocation_RAdmin.getText());
-            selectCR.setStatusR("Received");
-            selectCR.setPersonNameR(Run.acc.getUsername());
-            cn.UpdateCourier_request(selectCR);
-            clearDataRQAdmin();
-            listCourierRequest =cn.getListCourier_Request();
-            refreshTableViewAdminRequest();
-        
+        Courier_Request selectCR = (Courier_Request) model.getObjectAtRow(row);
+        selectCR.setCurrentLocationR(txtCurrentLocation_RAdmin.getText());
+        selectCR.setStatusR("Received");
+        selectCR.setPersonNameR(Run.acc.getUsername());
+        cn.UpdateCourier_request(selectCR);
+        clearDataRQAdmin();
+        listCourierRequest = cn.getListCourier_Request();
+        refreshTableViewAdminRequest();
+
     }//GEN-LAST:event_btnApproveActionPerformed
+
+    private void txt_UserNamPKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_UserNamPKeyPressed
+        this.txt_UserNamP.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    }//GEN-LAST:event_txt_UserNamPKeyPressed
+
+    private void txt_PasswordPKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_PasswordPKeyPressed
+        this.txt_PasswordP.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    }//GEN-LAST:event_txt_PasswordPKeyPressed
+
+    private void txt_EmailPKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_EmailPKeyPressed
+        this.txt_EmailP.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    }//GEN-LAST:event_txt_EmailPKeyPressed
+
+    private void txt_LocationPKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_LocationPKeyPressed
+        this.txt_LocationP.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    }//GEN-LAST:event_txt_LocationPKeyPressed
+
+    private void txt_MobileNumberPKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_MobileNumberPKeyPressed
+        this.txt_MobileNumberP.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    }//GEN-LAST:event_txt_MobileNumberPKeyPressed
     private void fillInDataViewAdminRequest() {
         int row = this.table_ViewRequestAdmin.getSelectedRow();
         DeliveryViewRQAdminTableModel model = (DeliveryViewRQAdminTableModel) this.table_ViewRequestAdmin.getModel();
-        Courier_Request selectCR = (Courier_Request)model.getObjectAtRow(row);
+        Courier_Request selectCR = (Courier_Request) model.getObjectAtRow(row);
         lbl_UserName_RequestAdmin.setText(selectCR.getUsernameR());
         bl_Email_RequestAdmin.setText(selectCR.getEmailR());
         bl_description_RequestAdmin.setText(selectCR.getDesciptionR());
@@ -1878,10 +2078,11 @@ public final class JFMainAPP extends javax.swing.JFrame {
         bl_UseLocation_RequestAdmin.setText(selectCR.getAddressR());
         bl_mobile_RequestAdmin.setText(selectCR.getPhoneNumberR());
         bl_cost_RequestAdmin.setText(String.valueOf(selectCR.getCostR()));
-        
+
     }
-    private void clearDataRQAdmin(){
-         lbl_UserName_RequestAdmin.setText("");
+
+    private void clearDataRQAdmin() {
+        lbl_UserName_RequestAdmin.setText("");
         bl_Email_RequestAdmin.setText("");
         bl_description_RequestAdmin.setText("");
         bl_weight_RequestAdmin.setText("");
@@ -1890,7 +2091,8 @@ public final class JFMainAPP extends javax.swing.JFrame {
         bl_mobile_RequestAdmin.setText("");
         bl_cost_RequestAdmin.setText("");
     }
-    private void cleardataDP(){
+
+    private void cleardataDP() {
         txt_code_editDP.setText("");
         txt_username_editDP.setText("");
         txt_Email_editDP.setText("");
@@ -1898,8 +2100,7 @@ public final class JFMainAPP extends javax.swing.JFrame {
         txt_Mobile_editDP.setText("");
         cbx_EDitGenderDP.setSelectedIndex(0);
     }
- 
-  
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> Cbx_GenderP;

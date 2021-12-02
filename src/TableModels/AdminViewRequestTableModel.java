@@ -14,7 +14,7 @@ import models.Courier_Request;
  * @author PC
  */
 public class AdminViewRequestTableModel extends AbstractTableModel{
-    private String[] columnNames ={"Code" ,"Username","Email","Description","Approx Weight","Destination","Address", "Mobile No"};
+    private String[] columnNames ={"Code" ,"Username","Email","Description","Approx Weight(Kg)","Destination","Address", "Mobile No"};
     private  ArrayList<Courier_Request> listdata;
     private ArrayList<Object[]> listRow = new ArrayList<>();
     public AdminViewRequestTableModel(ArrayList<Courier_Request> listRequest){

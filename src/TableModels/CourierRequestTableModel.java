@@ -14,7 +14,7 @@ import models.Courier_Request;
  * @author PC
  */
 public class CourierRequestTableModel extends AbstractTableModel{
-    private String[] columnNames ={"Code" ,"Username","Email","Description","Approx Weight","Destination","From Address", "Mobile No","Shipping service","Status","Cost","Current Location","Person Name"};
+    private String[] columnNames ={"Code" ,"Username","Email","Description","Approx Weight(kg)","Destination","From Address", "Mobile No","Shipping service","Status","Cost","Current Location","Person Name"};
     private  ArrayList<Courier_Request> listdata;
     private ArrayList<Object[]> listRow = new ArrayList<>();
     public CourierRequestTableModel(ArrayList<Courier_Request> listRequest){
